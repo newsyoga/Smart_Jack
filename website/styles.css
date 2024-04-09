@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
+
+* {
+    background-color: #CEDDF0;
+    font-family: "Karla", sans-serif;
+}
+
+body{
+    width: 80%;
+    margin: auto;
+}
+
+.l1 img, .l2 img{
+    height: 5dvh;
+}
+
+.l1, .l2{
+    height: 7dvh;
+    font-size: 64px;
+    font-weight: 200;
+}
+
+.score{
+    font-weight: 400;
+    font-size: 170px;
+}
+
+.lftdv, .info, .bottom{
+    display: flex;
+}
+
+.lftdv {
+    width: 45%;
+}
+
+.left .score, .right .lane{
+    margin-left: auto;
+}
+
+.left{
+    margin-right: 5%;
+}
+
+.right{
+    margin-left: 5%;
+}
+
+.info{
+    margin-top: 3%;
+}
+
+.player{
+    width: 25%;
+}
+
+.comments{
+    width: 50%;
+}
+
+.playerimg{
+    height: 40%;
+    border-radius: 100%;
+    margin-top: 90%;
+}
+
+.bottom{
+    height: 60dvh;
+}
+
+.cmt{
+    font-size: 110%;
+    text-align: center;
+    vertical-align: middle;
+    margin-top: 5%;
+}
+
+.comments{
+    margin-top: 2%;
+    opacity: 0.8;
+}
