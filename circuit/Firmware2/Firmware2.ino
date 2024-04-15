@@ -16,6 +16,9 @@
 #define LEDB_3_PIN_VIN	6
 #define LEDB_4_PIN_VIN	9
 #define LEDB_5_PIN_VIN	10
+#define LEDB_6_PIN_VIN	A0
+#define LEDB_7_PIN_VIN	A1
+#define LEDB_8_PIN_VIN	A5
 #define NRF24L01_PIN_CE	4
 #define NRF24L01_PIN_CS	7
 
@@ -30,6 +33,10 @@ LED ledB_2(LEDB_2_PIN_VIN);
 LED ledB_3(LEDB_3_PIN_VIN);
 LED ledB_4(LEDB_4_PIN_VIN);
 LED ledB_5(LEDB_5_PIN_VIN);
+
+LED ledB_6(LEDB_6_PIN_VIN);
+LED ledB_7(LEDB_7_PIN_VIN);
+LED ledB_8(LEDB_8_PIN_VIN);
 
 
 // define vars for testing menu
@@ -57,87 +64,125 @@ void setup()
   radio.setPALevel(RF24_PA_MIN);
   radio.startListening();
 
-    menuOption = menu();
+  //menuOption = menu();
     
 }
 
+String recvData(){
+  if (radio.available()) {
+    char recivedStr[25];
+    radio.read(&recivedStr, sizeof(recivedStr));     
+    Serial.println(recivedStr);
+    String retDat = recivedStr;
+    return(retDat);
+  }
+}
+
+void processData(){
+  //String rcv = recvData();
+  String rcv = "255,2930,34.59";
+  String touchs;
+  
+  for(int i=0; i < rcv.length(); i++) {
+    if(rcv.charAt(i) == ','){
+      break;
+    }
+    touchs += rcv[i];
+  }
+  byte touch = touchs.toInt(); // invert input (~)
+  // touch when low
+
+  // plot LED
+  // ON when low
+  ledB_8.setState((touch >> 0) & 0b1);
+  ledB_7.setState((touch >> 1) & 0b1);
+  ledB_6.setState((touch >> 2) & 0b1);
+  ledB_5.setState((touch >> 3) & 0b1);
+
+  ledB_4.setState((touch >> 4) & 0b1);
+  ledB_3.setState((touch >> 5) & 0b1);
+  ledB_2.setState((touch >> 6) & 0b1);
+  ledB_1.setState((touch >> 7) & 0b1);
+
+}
+
 // Main logic of your circuit. It defines the interaction between the components you selected. After setup, it runs over and over again, in an eternal loop.
-void loop() 
-{
+void loop() {
+    processData();
+    delay(50);
     
+//     if(menuOption == '1') {
+//     // Buzzer - Test Code
+//     // The buzzer will turn on and off for 500ms (0.5 sec)
+//     buzzer.on();       // 1. turns on
+//     delay(500);             // 2. waits 500 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
+//     buzzer.off();      // 3. turns off.
+//     delay(500);             // 4. waits 500 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
+//     }
+//     else if(menuOption == '2') {
+//     // LED - Basic Blue 5mm #1 - Test Code
+//     // The LED will turn on and fade till it is off
+//     for(int i=255 ; i> 0 ; i -= 5)
+//     {
+         //ledB_1;                      // 1. Dim Led 
+//         delay(15);                               // 2. waits 5 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
+//     }                                          
+//     ledB_1.off();                        // 3. turns off
+//     }
+//     else if(menuOption == '3') {
+//     // LED - Basic Blue 5mm #2 - Test Code
+//     // The LED will turn on and fade till it is off
+//     for(int i=255 ; i> 0 ; i -= 5)
+//     {
+//         ledB_2.dim(i);                      // 1. Dim Led 
+//         delay(15);                               // 2. waits 5 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
+//     }                                          
+//     ledB_2.off();                        // 3. turns off
+//     }
+//     else if(menuOption == '4') {
+//     // LED - Basic Blue 5mm #3 - Test Code
+//     // The LED will turn on and fade till it is off
+//     for(int i=255 ; i> 0 ; i -= 5)
+//     {
+//         ledB_3.dim(i);                      // 1. Dim Led 
+//         delay(15);                               // 2. waits 5 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
+//     }                                          
+//     ledB_3.off();                        // 3. turns off
+//     }
+//     else if(menuOption == '5') {
+//     // LED - Basic Blue 5mm #4 - Test Code
+//     // The LED will turn on and fade till it is off
+//     for(int i=255 ; i> 0 ; i -= 5)
+//     {
+//         ledB_4.dim(i);                      // 1. Dim Led 
+//         delay(15);                               // 2. waits 5 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
+//     }                                          
+//     ledB_4.off();                        // 3. turns off
+//     }
+//     else if(menuOption == '6') {
+//     // LED - Basic Blue 5mm #5 - Test Code
+//     // The LED will turn on and fade till it is off
+//     for(int i=255 ; i> 0 ; i -= 5)
+//     {
+//         ledB_5.dim(i);                      // 1. Dim Led 
+//         delay(15);                               // 2. waits 5 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
+//     }                                          
+//     ledB_5.off();                        // 3. turns off
+//     }
+//     else if(menuOption == '7')
+//     {
+//     // Disclaimer: The NRF24L01 - 2.4G Wireless Transceiver Module is in testing and/or doesn't have code, therefore it may be buggy. Please be kind and report any bugs you may find.
+//     if (radio.available()) {
+//     char text[32] = "";
+//     radio.read(&text, sizeof(text));
+//     Serial.println(text);
+//     }
+//     }
     
-    if(menuOption == '1') {
-    // Buzzer - Test Code
-    // The buzzer will turn on and off for 500ms (0.5 sec)
-    buzzer.on();       // 1. turns on
-    delay(500);             // 2. waits 500 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
-    buzzer.off();      // 3. turns off.
-    delay(500);             // 4. waits 500 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
-    }
-    else if(menuOption == '2') {
-    // LED - Basic Blue 5mm #1 - Test Code
-    // The LED will turn on and fade till it is off
-    for(int i=255 ; i> 0 ; i -= 5)
-    {
-        ledB_1.dim(i);                      // 1. Dim Led 
-        delay(15);                               // 2. waits 5 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
-    }                                          
-    ledB_1.off();                        // 3. turns off
-    }
-    else if(menuOption == '3') {
-    // LED - Basic Blue 5mm #2 - Test Code
-    // The LED will turn on and fade till it is off
-    for(int i=255 ; i> 0 ; i -= 5)
-    {
-        ledB_2.dim(i);                      // 1. Dim Led 
-        delay(15);                               // 2. waits 5 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
-    }                                          
-    ledB_2.off();                        // 3. turns off
-    }
-    else if(menuOption == '4') {
-    // LED - Basic Blue 5mm #3 - Test Code
-    // The LED will turn on and fade till it is off
-    for(int i=255 ; i> 0 ; i -= 5)
-    {
-        ledB_3.dim(i);                      // 1. Dim Led 
-        delay(15);                               // 2. waits 5 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
-    }                                          
-    ledB_3.off();                        // 3. turns off
-    }
-    else if(menuOption == '5') {
-    // LED - Basic Blue 5mm #4 - Test Code
-    // The LED will turn on and fade till it is off
-    for(int i=255 ; i> 0 ; i -= 5)
-    {
-        ledB_4.dim(i);                      // 1. Dim Led 
-        delay(15);                               // 2. waits 5 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
-    }                                          
-    ledB_4.off();                        // 3. turns off
-    }
-    else if(menuOption == '6') {
-    // LED - Basic Blue 5mm #5 - Test Code
-    // The LED will turn on and fade till it is off
-    for(int i=255 ; i> 0 ; i -= 5)
-    {
-        ledB_5.dim(i);                      // 1. Dim Led 
-        delay(15);                               // 2. waits 5 milliseconds (0.5 sec). Change the value in the brackets (500) for a longer or shorter delay in milliseconds.
-    }                                          
-    ledB_5.off();                        // 3. turns off
-    }
-    else if(menuOption == '7')
-    {
-    // Disclaimer: The NRF24L01 - 2.4G Wireless Transceiver Module is in testing and/or doesn't have code, therefore it may be buggy. Please be kind and report any bugs you may find.
-    if (radio.available()) {
-    char text[32] = "";
-    radio.read(&text, sizeof(text));
-    Serial.println(text);
-    }
-    }
-    
-    if (millis() - time0 > timeout)
-    {
-        menuOption = menu();
-    }
+//     if (millis() - time0 > timeout)
+//     {
+//         menuOption = menu();
+//     }
     
 }
 
@@ -190,47 +235,3 @@ char menu()
         }
     }
 }
-
-/*******************************************************
-
-*    Circuito.io is an automatic generator of schematics and code for off
-*    the shelf hardware combinations.
-
-*    Copyright (C) 2016 Roboplan Technologies Ltd.
-
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU General Public License as published by
-*    the Free Software Foundation, either version 3 of the License, or
-*    (at your option) any later version.
-
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU General Public License for more details.
-
-*    You should have received a copy of the GNU General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-*    In addition, and without limitation, to the disclaimers of warranties 
-*    stated above and in the GNU General Public License version 3 (or any 
-*    later version), Roboplan Technologies Ltd. ("Roboplan") offers this 
-*    program subject to the following warranty disclaimers and by using 
-*    this program you acknowledge and agree to the following:
-*    THIS PROGRAM IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS, AND 
-*    WITHOUT WARRANTIES OF ANY KIND EITHER EXPRESS OR IMPLIED.  ROBOPLAN 
-*    HEREBY DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT 
-*    NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, TITLE, FITNESS 
-*    FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND THOSE ARISING BY 
-*    STATUTE OR FROM A COURSE OF DEALING OR USAGE OF TRADE. 
-*    YOUR RELIANCE ON, OR USE OF THIS PROGRAM IS AT YOUR SOLE RISK.
-*    ROBOPLAN DOES NOT GUARANTEE THAT THE PROGRAM WILL BE FREE OF, OR NOT 
-*    SUSCEPTIBLE TO, BUGS, SECURITY BREACHES, OR VIRUSES. ROBOPLAN DOES 
-*    NOT WARRANT THAT YOUR USE OF THE PROGRAM, INCLUDING PURSUANT TO 
-*    SCHEMATICS, INSTRUCTIONS OR RECOMMENDATIONS OF ROBOPLAN, WILL BE SAFE 
-*    FOR PERSONAL USE OR FOR PRODUCTION OR COMMERCIAL USE, WILL NOT 
-*    VIOLATE ANY THIRD PARTY RIGHTS, WILL PROVIDE THE INTENDED OR DESIRED
-*    RESULTS, OR OPERATE AS YOU INTENDED OR AS MAY BE INDICATED BY ROBOPLAN. 
-*    YOU HEREBY WAIVE, AGREE NOT TO ASSERT AGAINST, AND RELEASE ROBOPLAN, 
-*    ITS LICENSORS AND AFFILIATES FROM, ANY CLAIMS IN CONNECTION WITH ANY OF 
-*    THE ABOVE. 
-********************************************************/

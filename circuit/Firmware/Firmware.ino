@@ -56,8 +56,7 @@ const byte address[6] = "00001";
 
 void setup() {
   Serial.begin(9600);
-  while (!Serial)
-    ;
+  while (!Serial);
   Serial.println("start");
 
   heartpulse.begin(HEARTPULSE_PIN_SIG);
@@ -84,7 +83,7 @@ void setup() {
 // Main logic of your circuit. It defines the interaction between the components you selected. After setup, it runs over and over again, in an eternal loop.
 void loop() {
   sendData();
-  delay(1000);
+  delay(50);
 }
 
 char menu() {
