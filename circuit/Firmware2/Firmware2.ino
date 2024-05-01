@@ -18,7 +18,7 @@
 #define LEDB_5_PIN_VIN	10
 #define LEDB_6_PIN_VIN	A0
 #define LEDB_7_PIN_VIN	A1
-#define LEDB_8_PIN_VIN	A5
+#define LEDB_8_PIN_VIN	A2
 #define NRF24L01_PIN_CE	4
 #define NRF24L01_PIN_CS	7
 
@@ -61,11 +61,28 @@ void setup()
     
   radio.begin();
   radio.openReadingPipe(0, address);
-  radio.setPALevel(RF24_PA_MIN);
+  radio.setPALevel(3);
   radio.startListening();
 
   //menuOption = menu();
     
+}
+
+bool setfls = 0;
+void testNrfRv(){
+  if (radio.available()) {
+    char text[32] = "";
+    radio.read(&text, sizeof(text));
+    Serial.println(text);
+      setfls = 1;
+  } else {
+    //Serial.print("Test in : ");
+    if(!setfls){
+      Serial.println(radio.available());
+      //setfls = 1;
+    }
+    
+  }
 }
 
 String recvData(){
@@ -79,8 +96,8 @@ String recvData(){
 }
 
 void processData(){
-  //String rcv = recvData();
-  String rcv = "255,2930,34.59";
+  String rcv = recvData();
+  //String rcv = "255,2930,34.59";
   String touchs;
   
   for(int i=0; i < rcv.length(); i++) {
@@ -108,8 +125,11 @@ void processData(){
 
 // Main logic of your circuit. It defines the interaction between the components you selected. After setup, it runs over and over again, in an eternal loop.
 void loop() {
-    processData();
-    delay(50);
+    // processData();
+    // delay(50);
+
+    testNrfRv();
+    //delay(10);
     
 //     if(menuOption == '1') {
 //     // Buzzer - Test Code

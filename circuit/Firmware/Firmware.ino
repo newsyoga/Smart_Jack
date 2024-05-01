@@ -61,7 +61,7 @@ void setup() {
 
   heartpulse.begin(HEARTPULSE_PIN_SIG);
   Wire.begin();
-  mpu6050.initialize();
+  //mpu6050.initialize();
 
   pushButton_1.init();
   pushButton_2.init();
@@ -74,16 +74,21 @@ void setup() {
 
   radio.begin();
   radio.openWritingPipe(address);
-  radio.setPALevel(RF24_PA_MIN);
+  radio.setPALevel(3);
   radio.stopListening();
-
+  Serial.println("Done init!");
+  
   //menuOption = menu();
 }
 
 // Main logic of your circuit. It defines the interaction between the components you selected. After setup, it runs over and over again, in an eternal loop.
 void loop() {
-  sendData();
-  delay(50);
+  //sendData();
+  //delay(50);
+
+  //testNrf();
+  testTch();
+  delay(1000);
 }
 
 char menu() {
@@ -141,6 +146,15 @@ char menu() {
   }
 }
 
+void testTch(){
+  Serial.println(getTouch(),BIN);
+}
+
+
+void testNrf(){
+  char dataMed[20] = "Jay BHAIRAVA!";
+  Serial.println(radio.write(&dataMed, sizeof(dataMed)));
+}
 
 
 int heartBeats() {
